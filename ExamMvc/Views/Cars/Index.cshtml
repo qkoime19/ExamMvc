@@ -1,0 +1,66 @@
+﻿@model IEnumerable<ExamMvc.Models.Car>
+
+@{
+    ViewBag.Title = "Автомобили";
+    var categories = ViewBag.Categories as List<string> ?? new List<string>();
+    string selectedCategory = ViewBag.Category as string;
+}
+
+<h2>Автомобили</h2>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-success">@TempData["Message"]</div>
+}
+
+@using (Html.BeginForm("Index", "Cars", FormMethod.Get, new { @class = "row g-2 align-items-center" }))
+{
+    <div class="col-auto">
+        <input type="text" name="search" value="@ViewBag.Search" class="form-control" placeholder="Модел или марка" />
+    </div>
+    <div class="col-auto">
+        <select name="category" class="form-select">
+            <option value="">Всички</option>
+            @foreach (var c in categories)
+            {
+                <option value="@c" selected="@(c == selectedCategory)">@c</option>
+            }
+        </select>
+    </div>
+    <div class="col-auto">
+        <input type="submit" value="Търси" class="btn btn-secondary" />
+    </div>
+}
+
+<p style="margin-top:15px">
+    @Html.ActionLink("Добави", "Create", null, new { @class = "btn btn-primary" })
+</p>
+
+<p>Намерени записи: <b>@Model.Count()</b></p>
+
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.Model)</th>
+        <th>@Html.DisplayNameFor(model => model.Brand)</th>
+        <th>@Html.DisplayNameFor(model => model.FuelType)</th>
+        <th>@Html.DisplayNameFor(model => model.Year)</th>
+        <th>@Html.DisplayNameFor(model => model.Price)</th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Model)</td>
+            <td>@Html.DisplayFor(modelItem => item.Brand)</td>
+            <td>@Html.DisplayFor(modelItem => item.FuelType)</td>
+            <td>@Html.DisplayFor(modelItem => item.Year)</td>
+            <td>@Html.DisplayFor(modelItem => item.Price)</td>
+            <td>
+                @Html.ActionLink("Детайли", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Редакция", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Изтриване", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+</table>
